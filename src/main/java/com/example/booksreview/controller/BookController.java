@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 @RestController
 @RequestMapping("/book")
@@ -35,5 +37,11 @@ public class BookController {
   public ResponseEntity<List<BookDTO>> findAllBooks() {
     return new ResponseEntity<List<BookDTO>>(bookService.findAllBooks(), HttpStatus.OK);
   }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<BookDTO> findBookById(@PathVariable Long id) {
+    return new ResponseEntity<>(bookService.findBookById(id), HttpStatus.OK);
+  }
+  
 
 }

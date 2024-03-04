@@ -45,4 +45,14 @@ public class BookServiceImpl implements BookService {
 
   }
 
+  @Override
+  public BookDTO findBookById(Long id) {
+
+    Book bookDB = bookRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Livro não encontrado com o ID: " + id));
+
+    return new BookDTO(bookDB);
+
+  }
+
 }
