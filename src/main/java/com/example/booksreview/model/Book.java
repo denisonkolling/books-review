@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
+import com.example.booksreview.dto.CreateBookDTO;
+
 @Entity
-@Table(name="tb_books")
+@Table(name = "tb_books")
 public class Book {
 
     @Id
@@ -22,16 +24,20 @@ public class Book {
     @OneToMany
     private List<Review> reviews;
 
-    
     public Book() {
     }
 
     public Book(Long id, String title, User user, Integer year, List<Review> reviews) {
-      this.id = id;
-      this.title = title;
-      this.user = user;
-      this.year = year;
-      this.reviews = reviews;
+        this.id = id;
+        this.title = title;
+        this.user = user;
+        this.year = year;
+        this.reviews = reviews;
+    }
+
+    public Book(CreateBookDTO createBookDTO) {
+        this.title = createBookDTO.title();
+        this.year = createBookDTO.year();
     }
 
     public Long getId() {

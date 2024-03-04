@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.booksreview.dto.CreateUserDTO;
+import com.example.booksreview.dto.UserDTO;
 import com.example.booksreview.service.UserService;
 
 import org.springframework.http.HttpStatus;
@@ -23,8 +24,8 @@ public class UserController {
   }
 
   @PostMapping
-  public ResponseEntity<?> createUser(@RequestBody CreateUserDTO user) {
-    return new ResponseEntity<>(userService.createUser(user), HttpStatus.CREATED);
+  public ResponseEntity<UserDTO> createUser(@RequestBody CreateUserDTO user) {
+    return new ResponseEntity<UserDTO>(userService.createUser(user), HttpStatus.CREATED);
   }
   
   
