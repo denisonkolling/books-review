@@ -1,7 +1,12 @@
 package com.example.booksreview.model;
 
-
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.UUID;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.booksreview.dto.CreateUserDTO;
 
@@ -9,7 +14,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "tb_users")
-public class User {
+public class User implements UserDetails {
 
     @Id
     private String guid;
@@ -20,14 +25,19 @@ public class User {
 
     private String password;
 
+    private LocalDateTime createdAt;
+
+    private boolean enabled;
+
     public User() {
     }
 
-    public User(CreateUserDTO createUserDTO) {
+    public User(CreateUserDTO createUserDTO, String password) {
         this.guid = UUID.randomUUID().toString();
         this.name = createUserDTO.name();
         this.email = createUserDTO.email();
-        this.password = createUserDTO.password();
+        this.createdAt = LocalDateTime.now();
+        this.password = password;
     }
 
     public String getGuid() {
@@ -54,13 +64,51 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
 
 }
