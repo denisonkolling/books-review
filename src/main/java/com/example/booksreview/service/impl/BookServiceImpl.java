@@ -1,7 +1,11 @@
 package com.example.booksreview.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
+import com.example.booksreview.dto.BookDTO;
 import com.example.booksreview.dto.CreateBookDTO;
 import com.example.booksreview.model.Book;
 import com.example.booksreview.repository.BookRepository;
@@ -22,6 +26,22 @@ public class BookServiceImpl implements BookService {
     Book book = this.bookRepository.save(new Book(createBookDTO));
 
     return book;
+
+  }
+
+  @Override
+  public List<BookDTO> findAllBooks() {
+
+    List<Book> booksList = bookRepository.findAll();
+
+    List<BookDTO> booksDTOList = new ArrayList<>();
+
+    for (Book book : booksList) {
+      BookDTO bookDTO = new BookDTO(book);
+      booksDTOList.add(bookDTO);
+    }
+
+    return booksDTOList;
 
   }
 

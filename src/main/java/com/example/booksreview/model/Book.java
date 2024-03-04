@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
+import com.example.booksreview.dto.BookDTO;
 import com.example.booksreview.dto.CreateBookDTO;
 
 @Entity
@@ -38,6 +39,13 @@ public class Book {
     public Book(CreateBookDTO createBookDTO) {
         this.title = createBookDTO.title();
         this.year = createBookDTO.year();
+    }
+
+    public Book(BookDTO bookDTO) {
+        this.id = bookDTO.id();
+        this.title = bookDTO.title();
+        this.year = bookDTO.year();
+        this.reviews = bookDTO.reviews();
     }
 
     public Long getId() {
