@@ -1,6 +1,10 @@
 package com.example.booksreview.model;
 
 
+import java.util.UUID;
+
+import com.example.booksreview.dto.CreateUserDTO;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -8,8 +12,7 @@ import jakarta.persistence.*;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String guid;
 
     private String name;
 
@@ -20,19 +23,19 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String name, String email, String password) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.password = password;
+    public User(CreateUserDTO createUserDTO) {
+        this.guid = UUID.randomUUID().toString();
+        this.name = createUserDTO.name();
+        this.email = createUserDTO.email();
+        this.password = createUserDTO.password();
     }
 
-    public Long getId() {
-        return id;
+    public String getGuid() {
+        return guid;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setGuid(String guid) {
+        this.guid = guid;
     }
 
     public String getName() {
