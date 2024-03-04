@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.booksreview.dto.BookDTO;
 import com.example.booksreview.dto.CreateBookDTO;
+import com.example.booksreview.dto.CreateReviewDTO;
 import com.example.booksreview.model.Book;
 import com.example.booksreview.service.BookService;
 
@@ -42,6 +43,12 @@ public class BookController {
   public ResponseEntity<BookDTO> findBookById(@PathVariable Long id) {
     return new ResponseEntity<>(bookService.findBookById(id), HttpStatus.OK);
   }
+
+  @PostMapping("/{id}/review")
+  public ResponseEntity<?> createBookReview(@PathVariable Long id, @RequestBody CreateReviewDTO createReviewDTO) {
+      return new ResponseEntity<>(bookService.createBookReview(createReviewDTO), HttpStatus.CREATED);
+  }
+  
   
 
 }

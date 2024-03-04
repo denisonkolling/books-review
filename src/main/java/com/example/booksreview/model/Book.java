@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.example.booksreview.dto.BookDTO;
 import com.example.booksreview.dto.CreateBookDTO;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "tb_books")
@@ -22,6 +23,7 @@ public class Book {
 
     private Integer year;
 
+    @JsonManagedReference
     @OneToMany
     private List<Review> reviews;
 
@@ -87,5 +89,4 @@ public class Book {
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
     }
-
 }

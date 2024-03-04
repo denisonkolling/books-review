@@ -1,5 +1,7 @@
 package com.example.booksreview.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -15,6 +17,7 @@ public class Review {
     @ManyToOne
     private User user;
 
+    @JsonBackReference
     @ManyToOne
     private Book book;
 
@@ -60,4 +63,10 @@ public class Review {
         this.book = book;
     }
 
+    @Override
+    public String toString() {
+      return "Review [id=" + id + ", rate=" + rate + ", user=" + user + ", book=" + book + "]";
+    }
+
+    
 }
