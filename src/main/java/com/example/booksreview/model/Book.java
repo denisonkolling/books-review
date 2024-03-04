@@ -21,4 +21,57 @@ public class Book {
 
     @OneToMany
     private List<Review> reviews;
+
+    
+    public Book() {
+    }
+
+    public Book(Long id, String title, User user, Integer year, List<Review> reviews) {
+      this.id = id;
+      this.title = title;
+      this.user = user;
+      this.year = year;
+      this.reviews = reviews;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
 }
