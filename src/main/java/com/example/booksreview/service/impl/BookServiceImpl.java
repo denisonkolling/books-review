@@ -65,6 +65,10 @@ public class BookServiceImpl implements BookService {
     Book book = bookRepository.findById(createReviewDTO.bookId())
         .orElseThrow(() -> new RuntimeException("Livro não encontrado com o ID: " + createReviewDTO.bookId()));
 
+    if (book.getReviews() == null) {
+      book.setReviews(new ArrayList<>());
+    }
+
     Review review = new Review();
     review.setBook(book);
     review.setRate(createReviewDTO.rate());

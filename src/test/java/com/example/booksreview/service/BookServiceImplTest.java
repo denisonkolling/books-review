@@ -2,9 +2,12 @@ package com.example.booksreview.service;
 
 import com.example.booksreview.dto.BookDTO;
 import com.example.booksreview.dto.CreateBookDTO;
+import com.example.booksreview.dto.CreateReviewDTO;
 import com.example.booksreview.model.Book;
+import com.example.booksreview.model.Review;
 import com.example.booksreview.model.User;
 import com.example.booksreview.repository.BookRepository;
+import com.example.booksreview.repository.ReviewRepository;
 import com.example.booksreview.service.impl.BookServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -33,12 +36,15 @@ class BookServiceImplTest {
     @InjectMocks
     private BookServiceImpl bookService;
 
+    @Mock
+    private ReviewRepository reviewRepository;
+
     @Captor
     private ArgumentCaptor<Book> bookCaptor;
 
     @Test
     @DisplayName("Should create book with success")
-    void shouldCreateUserWithSucess() {
+    void shouldCreateBookWithSucess() {
 
         /* Arrange */
         CreateBookDTO createBookDTO = new CreateBookDTO("Book Title Test", 2024);
@@ -89,7 +95,7 @@ class BookServiceImplTest {
     }
 
     @Nested
-    class findBookById {
+    class FindBookById {
         @Test
         @DisplayName("Return book by id with success")
         void getBookByIdWithSuccess() {
@@ -117,4 +123,31 @@ class BookServiceImplTest {
             assertThrows(RuntimeException.class, () -> bookService.findBookById(nonExistingId));
         }
     }
+
+    @Nested
+    class BooksReview {
+
+        @Test
+        @DisplayName("Should create book review with success")
+        void shouldCreateBookReviewWithSucess() {
+
+            /* Arrange */
+            CreateReviewDTO createReviewDTO = new CreateReviewDTO(1L, 5);
+            Book book = new Book();
+            book.setId(1L);
+
+            when(bookRepository.findById(createReviewDTO.bookId())).thenReturn(Optional.of(book));
+
+            /* Act*/
+            Review createdReview = bookService.createBookReview(createReviewDTO);
+
+
+            /* Assertions */
+            verify(reviewRepository).save(createdReview);
+            assertEquals(createReviewDTO.bookId(), createdReview.getBook().getId());
+            assertEquals(createReviewDTO.rate(), createdReview.getRate());
+
+        }
+    }
+
 }
