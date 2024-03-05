@@ -1,11 +1,9 @@
 package com.example.booksreview.service;
 
 import com.example.booksreview.dto.CreateUserDTO;
-import com.example.booksreview.dto.UserDTO;
 import com.example.booksreview.model.User;
 import com.example.booksreview.repository.UserRepository;
 import com.example.booksreview.service.impl.UserServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -26,11 +24,6 @@ class UserServiceImplTest {
 
     @InjectMocks
     private UserServiceImpl userService;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Captor
     private ArgumentCaptor<User> userCaptor;
