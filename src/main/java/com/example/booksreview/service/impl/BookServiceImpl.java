@@ -17,9 +17,9 @@ import com.example.booksreview.service.BookService;
 @Service
 public class BookServiceImpl implements BookService {
 
-  private BookRepository bookRepository;
+  private final BookRepository bookRepository;
 
-  private ReviewRepository reviewRepository;
+  private final ReviewRepository reviewRepository;
 
   public BookServiceImpl(BookRepository bookRepository, ReviewRepository reviewRepository) {
     this.bookRepository = bookRepository;
@@ -29,9 +29,7 @@ public class BookServiceImpl implements BookService {
   @Override
   public Book createBook(CreateBookDTO createBookDTO) {
 
-    Book book = this.bookRepository.save(new Book(createBookDTO));
-
-    return book;
+      return this.bookRepository.save(new Book(createBookDTO));
 
   }
 

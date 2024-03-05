@@ -1,9 +1,13 @@
 package com.example.booksreview.service;
 
+import com.example.booksreview.dto.BookDTO;
 import com.example.booksreview.dto.CreateBookDTO;
 import com.example.booksreview.model.Book;
+import com.example.booksreview.model.User;
 import com.example.booksreview.repository.BookRepository;
 import com.example.booksreview.service.impl.BookServiceImpl;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -12,8 +16,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class BookServiceImplTest {
@@ -28,7 +36,8 @@ class BookServiceImplTest {
     private ArgumentCaptor<Book> bookCaptor;
 
     @Test
-    void testCreateBook() {
+    @DisplayName("Should create book with success")
+    void shouldCreateUserWithSucess() {
 
         /* Arrange */
         CreateBookDTO createBookDTO = new CreateBookDTO("Book Title Test", 2024);
@@ -42,4 +51,40 @@ class BookServiceImplTest {
         assertEquals(createBookDTO.title(), createdBook.getTitle());
         assertEquals(createBookDTO.year(), createdBook.getYear());
     }
+
+    @Nested
+    class ListBooksTest {
+        @Test
+        @DisplayName("Return all books with success when repository is not empty")
+        void returnAllBooksWithSuccessWhenRepositoryIsNotEmpty() {
+            /* Arrange */
+            User user = new User("123abc", "John Doe", "john@example.com", "password123", LocalDateTime.now(), true);
+            Book book = new Book(222L, "Book Title Test", user, 2024, null);
+            List<Book> bookList = List.of(book);
+            when(bookRepository.findAll()).thenReturn(bookList);
+
+            /* Act*/
+            List<BookDTO> output = bookService.findAllBooks();
+
+            /* Assertions */
+            assertNotNull(output);
+            assertEquals(bookList.size(), output.size());
+        }
+
+        @Test
+        @DisplayName("Return empty list when repository is empty")
+        void returnEmptyListWhenRepositoryIsEmpty() {
+            /* Arrange */
+            List<Book> emptyBookList = Collections.emptyList();
+            when(bookRepository.findAll()).thenReturn(emptyBookList);
+
+            /* Act*/
+            List<BookDTO> output = bookService.findAllBooks();
+
+            /* Assertions */
+            assertNotNull(output);
+            assertTrue(output.isEmpty());
+        }
+    }
+
 }

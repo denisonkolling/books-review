@@ -4,6 +4,7 @@ import com.example.booksreview.dto.CreateUserDTO;
 import com.example.booksreview.model.User;
 import com.example.booksreview.repository.UserRepository;
 import com.example.booksreview.service.impl.UserServiceImpl;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -29,7 +30,8 @@ class UserServiceImplTest {
     private ArgumentCaptor<User> userCaptor;
 
     @Test
-    void testCreateUser() {
+    @DisplayName("Should create user with success")
+    void shouldCreateUserWithSucess() {
 
         /* Arrange */
         CreateUserDTO createUserDTO = new CreateUserDTO("test@example.com", "Test User", "password");
