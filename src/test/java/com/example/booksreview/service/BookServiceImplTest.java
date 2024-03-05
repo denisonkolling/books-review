@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -87,4 +88,33 @@ class BookServiceImplTest {
         }
     }
 
+    @Nested
+    class findBookById {
+        @Test
+        @DisplayName("Return book by id with success")
+        void getBookByIdWithSuccess() {
+            // Arrange
+            User user = new User("123abc", "John Doe", "john@example.com", "password123", LocalDateTime.now(), true);
+            Book book = new Book(222L, "Book Title Test", user, 2024, null);
+
+            when(bookRepository.findById(book.getId())).thenReturn(Optional.of(book));
+
+            // Act
+            BookDTO output = bookService.findBookById(book.getId());
+
+            // Assert
+            assertEquals(book.getId(), output.id());
+        }
+
+        @Test
+        @DisplayName("Throw exception when book id not found")
+        void throwExceptionWhenBookIdNotFound() {
+            // Arrange
+            Long nonExistingId = 999L;
+            when(bookRepository.findById(nonExistingId)).thenReturn(Optional.empty());
+
+            // Act and Assert
+            assertThrows(RuntimeException.class, () -> bookService.findBookById(nonExistingId));
+        }
+    }
 }
