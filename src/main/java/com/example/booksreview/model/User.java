@@ -40,6 +40,15 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+    public User(String guid, String name, String email, String password, LocalDateTime createdAt, boolean enabled) {
+        this.guid = guid;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.createdAt = createdAt;
+        this.enabled = enabled;
+    }
+
     public String getGuid() {
         return guid;
     }
