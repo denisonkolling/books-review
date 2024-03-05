@@ -26,7 +26,9 @@ public class UserServiceImpl implements UserService {
 
     String passwordEncoded = this.passwordEncoder.encode(createUserDTO.password());
 
-    User user = this.userRepository.save(new User(createUserDTO, passwordEncoded));
+    User user = new User(createUserDTO, passwordEncoded);
+
+    userRepository.save(user);
     
     return new UserDTO(user);
   }

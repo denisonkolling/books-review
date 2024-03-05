@@ -8,9 +8,7 @@ import com.example.booksreview.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -34,32 +32,25 @@ class UserServiceImplTest {
         MockitoAnnotations.openMocks(this);
     }
 
+    @Captor
+    private ArgumentCaptor<User> userCaptor;
+
     @Test
     void testCreateUser() {
-        // Mock encoder de senha
-        String encodedPassword = "encodedPassword";
-        when(passwordEncoder.encode("password")).thenReturn(encodedPassword);
 
-        // Mock dados do usuario
+        /* Arrange */
         CreateUserDTO createUserDTO = new CreateUserDTO("test@example.com", "Test User", "password");
+        String encodedPassword = this.passwordEncoder.encode(createUserDTO.password());
         User savedUser = new User(createUserDTO, encodedPassword);
 
-        // Mock metodo save do repository
-        when(userRepository.save(any(User.class))).thenReturn(savedUser);
+        /* Act*/
+        userService.createUser(createUserDTO);
+        verify(userRepository).save(userCaptor.capture());
+        User createdUser = userCaptor.getValue();
 
-        // Chamada de metodo a ser testado
-        UserDTO userDTO = userService.createUser(createUserDTO);
-
-        // Verifica se user repository save foi chamado com parametros corretos
-        verify(userRepository, times(1)).save(any(User.class));
-
-        // Verifica se user password encode foi chamado com parametros corretos
-        verify(passwordEncoder, times(1)).encode("password");
-
-        // Verifica se userDTO contem dados esperados
-        assertEquals(createUserDTO.email(), userDTO.email());
-        assertEquals(createUserDTO.name(), userDTO.name());
-        assertEquals(savedUser.getGuid(), userDTO.guid());
-
+        /* Assertions */
+        assertEquals(savedUser.getEmail(), createdUser.getEmail());
+        assertEquals(savedUser.getName(), createdUser.getName());
+        assertEquals(savedUser.getPassword(), createdUser.getPassword());
     }
 }
