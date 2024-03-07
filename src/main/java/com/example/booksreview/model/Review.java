@@ -15,6 +15,7 @@ public class Review {
     private Integer rate;
 
     @ManyToOne
+    @JoinColumn(name = "user_guid", referencedColumnName = "guid", nullable = false)
     private User user;
 
     @JsonBackReference

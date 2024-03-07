@@ -18,7 +18,8 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(authorization ->
-                authorization.requestMatchers(HttpMethod.POST, "/user").permitAll()
+                authorization
+                        .requestMatchers(HttpMethod.POST, "/user").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated());
         httpSecurity.httpBasic(Customizer.withDefaults());
