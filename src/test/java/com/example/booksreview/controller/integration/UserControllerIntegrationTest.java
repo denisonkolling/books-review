@@ -22,8 +22,6 @@ public class UserControllerIntegrationTest extends TestContainersDatabaseConfigu
 
     private static RequestSpecification specification;
     private static ObjectMapper objectMapper;
-    private static CreateUserDTO createUserDTO;
-    private static UserDTO userDTO;
 
     @BeforeAll
     static void setup() {
@@ -36,21 +34,21 @@ public class UserControllerIntegrationTest extends TestContainersDatabaseConfigu
                 .addFilter(new RequestLoggingFilter(LogDetail.ALL))
                 .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
                 .build();
-
-        createUserDTO = new CreateUserDTO("test@test.com", "Test Name", "strong-password");
-
     }
 
     @Test
-    @DisplayName("Criar usuário com testes de integração deve retornar sucesso")
-    void createUserWithIntegrationTestsShloudReturnSuccess() throws JsonProcessingException {
+    @DisplayName("Should create user with integration test success")
+    void createUserWithIntegrationTestsShouldReturnSuccess() throws JsonProcessingException {
+
+        CreateUserDTO createUserDTO = new CreateUserDTO("test@test.com", "Test Name", "strong-password");
+
         String responseAsJson = RestAssured.given()
                 .spec(specification)
                 .contentType("application/json")
                 .body(createUserDTO)
                 .when().post().then().statusCode(201).extract().body().asString();
 
-        userDTO = objectMapper.readValue(responseAsJson, UserDTO.class);
+        UserDTO userDTO = objectMapper.readValue(responseAsJson, UserDTO.class);
 
         Assertions.assertNotNull(userDTO);
         Assertions.assertNotNull(userDTO.guid());
