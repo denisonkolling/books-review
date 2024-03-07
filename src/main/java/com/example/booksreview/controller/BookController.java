@@ -1,5 +1,7 @@
 package com.example.booksreview.controller;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,8 +32,8 @@ public class BookController {
   }
 
   @PostMapping
-  public ResponseEntity<Book> createBook(@RequestBody CreateBookDTO createBookDTO) {
-    return new ResponseEntity<Book>(bookService.createBook(createBookDTO), HttpStatus.CREATED);
+  public ResponseEntity<Book> createBook(@RequestBody CreateBookDTO createBookDTO, @AuthenticationPrincipal UserDetails userInSession) {
+    return new ResponseEntity<Book>(bookService.createBook(createBookDTO, userInSession), HttpStatus.CREATED);
   }
 
   @GetMapping
@@ -45,8 +47,8 @@ public class BookController {
   }
 
   @PostMapping("/{id}/review")
-  public ResponseEntity<?> createBookReview(@PathVariable Long id, @RequestBody CreateReviewDTO createReviewDTO) {
-      return new ResponseEntity<>(bookService.createBookReview(createReviewDTO), HttpStatus.CREATED);
+  public ResponseEntity<?> createBookReview(@PathVariable Long id, @RequestBody CreateReviewDTO createReviewDTO, @AuthenticationPrincipal UserDetails userInSession) {
+      return new ResponseEntity<>(bookService.createBookReview(createReviewDTO, userInSession), HttpStatus.CREATED);
   }
   
   

@@ -8,10 +8,10 @@ import com.example.booksreview.model.Review;
 public record BookDTO(
     Long id,
     String title,
-    Integer year,
-    List<Review> reviews) {
+    Integer year
+    ) {
 
   public BookDTO(Book book) {
-    this(book.getId(), book.getTitle(), book.getYear(), book.getReviews());
+    this(book.getId(), book.getTitle(), book.getYear());
   }
 }

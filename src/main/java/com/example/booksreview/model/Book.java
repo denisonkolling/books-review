@@ -19,6 +19,7 @@ public class Book {
     private String title;
 
     @ManyToOne
+    @JoinColumn(name = "user_guid", referencedColumnName = "guid", nullable = false)
     private User user;
 
     private Integer year;
@@ -43,11 +44,16 @@ public class Book {
         this.year = createBookDTO.year();
     }
 
+    public Book(CreateBookDTO createBookDTO, User user) {
+        this.title = createBookDTO.title();
+        this.year = createBookDTO.year();
+        this.user = user;
+    }
+
     public Book(BookDTO bookDTO) {
         this.id = bookDTO.id();
         this.title = bookDTO.title();
         this.year = bookDTO.year();
-        this.reviews = bookDTO.reviews();
     }
 
     public Long getId() {

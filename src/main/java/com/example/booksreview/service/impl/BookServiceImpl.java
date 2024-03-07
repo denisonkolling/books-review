@@ -1,6 +1,10 @@
 package com.example.booksreview.service.impl;
 
 
+import com.example.booksreview.dto.ReviewDTO;
+import com.example.booksreview.model.User;
+import com.example.booksreview.service.UserService;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.example.booksreview.dto.BookDTO;
@@ -22,15 +26,20 @@ public class BookServiceImpl implements BookService {
 
   private final ReviewRepository reviewRepository;
 
-  public BookServiceImpl(BookRepository bookRepository, ReviewRepository reviewRepository) {
+  private final UserService userService;
+
+  public BookServiceImpl(BookRepository bookRepository, ReviewRepository reviewRepository, UserService userService) {
     this.bookRepository = bookRepository;
     this.reviewRepository = reviewRepository;
+    this.userService = userService;
   }
 
   @Override
-  public Book createBook(CreateBookDTO createBookDTO) {
+  public Book createBook(CreateBookDTO createBookDTO, UserDetails userInSession) {
 
-      return this.bookRepository.save(new Book(createBookDTO));
+    User user = this.userService.findByEmail(userInSession.getUsername());
+
+      return this.bookRepository.save(new Book(createBookDTO, user));
 
   }
 
@@ -61,10 +70,12 @@ public class BookServiceImpl implements BookService {
   }
 
   @Override
-  public Review createBookReview(CreateReviewDTO createReviewDTO) {
+  public ReviewDTO createBookReview(CreateReviewDTO createReviewDTO, UserDetails userInSession) throws RuntimeException {
     
     Book book = bookRepository.findById(createReviewDTO.bookId())
         .orElseThrow(() -> new RuntimeException("Livro não encontrado com o ID: " + createReviewDTO.bookId()));
+
+    User user = this.userService.findByEmail(userInSession.getUsername());
 
     if (book.getReviews() == null) {
       book.setReviews(new ArrayList<>());
@@ -73,12 +84,13 @@ public class BookServiceImpl implements BookService {
     Review review = new Review();
     review.setBook(book);
     review.setRate(createReviewDTO.rate());
+    review.setUser(user);
 
     reviewRepository.save(review);
 
     book.getReviews().add(review);
 
-    return review;
+    return new ReviewDTO(review);
   }
 
 }
