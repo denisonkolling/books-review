@@ -9,9 +9,6 @@ create table tb_users
     password   varchar(255)
 );
 
-alter table tb_users
-    owner to postgres;
-
 create table tb_books
 (
     id        bigserial
@@ -22,9 +19,6 @@ create table tb_books
         constraint fk5jraanng5oqxnhgkdhv54w7k8
             references tb_users
 );
-
-alter table tb_books
-    owner to postgres;
 
 create table tb_reviews
 (
@@ -39,9 +33,6 @@ create table tb_reviews
             references tb_users
 );
 
-alter table tb_reviews
-    owner to postgres;
-
 create table tb_books_reviews
 (
     book_id    bigint not null
@@ -53,9 +44,6 @@ create table tb_books_reviews
         constraint fk5a789ikmkt9kjfxglbjwjiy1h
             references tb_reviews
 );
-
-alter table tb_books_reviews
-    owner to postgres;
 
 -- Dados para tb_users
 INSERT INTO tb_users (guid, created_at, email, enabled, name, password)

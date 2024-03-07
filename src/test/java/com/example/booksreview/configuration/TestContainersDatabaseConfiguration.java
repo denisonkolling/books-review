@@ -1,6 +1,7 @@
 package com.example.booksreview.configuration;
 
 import org.slf4j.Logger;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -21,10 +22,13 @@ public class TestContainersDatabaseConfiguration {
 
         private static final Logger LOGGER = LoggerFactory.getLogger(Initializer.class);
 
-        static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:16.1");
+        static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:12");
 
         private static void initContainer() {
-            Startables.deepStart(Stream.of(postgreSQLContainer)).join();
+//            Startables.deepStart(Stream.of(postgreSQLContainer)).join();
+            postgreSQLContainer
+                    .withInitScript("scripts/integrationtestinitscript.sql")
+                    .start();
         }
 
         private static Map<String, Object> createConnectionConfiguration() {
