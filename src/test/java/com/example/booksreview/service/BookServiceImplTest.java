@@ -3,6 +3,7 @@ package com.example.booksreview.service;
 import com.example.booksreview.dto.BookDTO;
 import com.example.booksreview.dto.CreateBookDTO;
 import com.example.booksreview.dto.CreateReviewDTO;
+import com.example.booksreview.dto.ReviewDTO;
 import com.example.booksreview.model.Book;
 import com.example.booksreview.model.Review;
 import com.example.booksreview.model.User;
@@ -49,8 +50,12 @@ class BookServiceImplTest {
         /* Arrange */
         CreateBookDTO createBookDTO = new CreateBookDTO("Book Title Test", 2024);
 
+        String email = "user@example.com";
+        User user = new User();
+        user.setEmail(email);
+
         /* Act*/
-        bookService.createBook(createBookDTO);
+        bookService.createBook(createBookDTO, user);
         verify(bookRepository).save(bookCaptor.capture());
         Book createdBook = bookCaptor.getValue();
 
@@ -135,17 +140,22 @@ class BookServiceImplTest {
             CreateReviewDTO createReviewDTO = new CreateReviewDTO(1L, 5);
             Book book = new Book();
             book.setId(1L);
+            book.setTitle("Book Teste");
+
+            String email = "user@example.com";
+            User user = new User();
+            user.setEmail(email);
 
             when(bookRepository.findById(createReviewDTO.bookId())).thenReturn(Optional.of(book));
 
             /* Act*/
-            Review createdReview = bookService.createBookReview(createReviewDTO);
+            ReviewDTO createdReview = bookService.createBookReview(createReviewDTO, user);
 
 
             /* Assertions */
-            verify(reviewRepository).save(createdReview);
-            assertEquals(createReviewDTO.bookId(), createdReview.getBook().getId());
-            assertEquals(createReviewDTO.rate(), createdReview.getRate());
+            verify(reviewRepository).save(any(Review.class));
+            assertEquals(createReviewDTO.bookId(), createdReview.id());
+            assertEquals(createReviewDTO.rate(), createdReview.rate());
 
         }
     }
