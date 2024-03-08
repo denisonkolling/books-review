@@ -42,6 +42,7 @@ public class User implements UserDetails {
         this.email = createUserDTO.email();
         this.createdAt = LocalDateTime.now();
         this.password = password;
+        this.enabled = true;
     }
 
     public User(String guid, String name, String email, String password, LocalDateTime createdAt, boolean enabled) {
@@ -50,7 +51,15 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.createdAt = createdAt;
-        this.enabled = enabled;
+        this.enabled = true;
+    }
+
+    public User(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.enabled = true;
+        this.createdAt = LocalDateTime.now();
     }
 
     public String getGuid() {
@@ -87,6 +96,18 @@ public class User implements UserDetails {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Override
