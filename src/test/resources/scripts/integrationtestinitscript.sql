@@ -48,7 +48,7 @@ create table tb_books_reviews
 -- Dados para tb_users
 INSERT INTO tb_users (guid, created_at, email, enabled, name, password)
 VALUES
-    ('1a2b3c4d', '2024-03-06 12:00:00', 'user1@example.com', true, 'John Doe', 'password123'),
+    ('1a2b3c4d', '2024-03-06 12:00:00', 'user1@example.com', true, 'John Doe', '$2a$10$t/7UMQUYObEcD/Pd/yDLaONGfbMDuFesm5j0U/wA6c0MUreMEPR92'),
     ('5e6f7g8h', '2024-03-06 13:00:00', 'user2@example.com', true, 'Jane Smith', 'letmein');
 
 -- Dados para tb_books

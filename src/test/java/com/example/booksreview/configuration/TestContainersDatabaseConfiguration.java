@@ -20,10 +20,9 @@ public class TestContainersDatabaseConfiguration {
 
         private static final Logger LOGGER = LoggerFactory.getLogger(Initializer.class);
 
-        static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:12");
+        static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:16-alpine");
 
         private static void initContainer() {
-//            Startables.deepStart(Stream.of(postgreSQLContainer)).join();
             postgreSQLContainer
                     .withInitScript("scripts/integrationtestinitscript.sql")
                     .start();
@@ -39,17 +38,14 @@ public class TestContainersDatabaseConfiguration {
 
         @Override
         public void initialize(ConfigurableApplicationContext applicationContext) {
-            /* Inicialize o contêiner que contém o PostgreSQL */
+
             initContainer();
 
-            /* Recuperar as configurações de ambiente do contexto do Spring */
             ConfigurableEnvironment environment = applicationContext.getEnvironment();
 
-            /* Criar configuração do testContainers para o Spring reconhecer */
             MapPropertySource testContainersProperties =
                     new MapPropertySource("testContainers", createConnectionConfiguration());
 
-            /* Adiciona as propriedades de configuração do banco dinamicamente */
             environment.getPropertySources().addFirst(testContainersProperties);
         }
     }
