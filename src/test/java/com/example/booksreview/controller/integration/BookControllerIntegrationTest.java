@@ -3,10 +3,8 @@ package com.example.booksreview.controller.integration;
 import com.example.booksreview.configuration.TestContainersDatabaseConfiguration;
 import com.example.booksreview.dto.BookDTO;
 import com.example.booksreview.dto.CreateBookDTO;
-import com.example.booksreview.dto.CreateUserDTO;
-import com.example.booksreview.model.Book;
-import com.example.booksreview.model.User;
 
+import com.example.booksreview.model.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,17 +17,14 @@ import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
-
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class BookControllerIntegrationTest extends TestContainersDatabaseConfiguration {
 
     private static RequestSpecification specification;
     private static ObjectMapper objectMapper;
-    private static CreateBookDTO createBookDTO;
-    private static CreateUserDTO createUserDTO;
-    public static BookDTO bookDTO;
+    private static User user;
+
 
     @BeforeAll
     static void setup() {
@@ -42,8 +37,10 @@ public class BookControllerIntegrationTest extends TestContainersDatabaseConfigu
                 .addFilter(new RequestLoggingFilter(LogDetail.ALL))
                 .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
                 .build();
-    }
 
+        user = new User("John Doe", "user1@example.com", "password123");
+
+    }
 
     @Test
     @Order(1)
@@ -55,6 +52,7 @@ public class BookControllerIntegrationTest extends TestContainersDatabaseConfigu
         String responseAsJson = RestAssured.given()
                 .spec(specification)
                 .contentType("application/json")
+                .auth().basic(user.getEmail(), user.getPassword())
                 .body(createBookDTO)
                 .when().post().then().statusCode(201).extract().body().asString();
 
@@ -69,20 +67,18 @@ public class BookControllerIntegrationTest extends TestContainersDatabaseConfigu
     }
 
     @Test
-    @DisplayName("Buscar livro por ID retorna com sucesso")
-    void getBookByIntegrationTestShouldReturnSuccess() throws JsonProcessingException {
+    @Order(2)
+    @DisplayName("Should return Book by Id with success")
+    void getBookByIdIntegrationTestShouldReturnSuccess() throws JsonProcessingException {
 
         Long id = (Long) 1L;
         String title = "The Great Gatsby";
         Integer year = 1925;
 
-        String email = "user1@example.com";
-        String password = "password123";
-
-
         String responseAsJson = RestAssured.given()
                 .spec(specification)
                 .pathParam("id", id)
+                .auth().basic(user.getEmail(), user.getPassword())
                 .when().get("{id}").then().statusCode(200).extract().body().asString();
 
         BookDTO bookById = objectMapper.readValue(responseAsJson, BookDTO.class);
