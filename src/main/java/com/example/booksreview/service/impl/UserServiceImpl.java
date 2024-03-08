@@ -48,5 +48,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             .orElseThrow(() -> new RuntimeException(String.format("User by email not found: %s", email)));
   }
 
+  @Override
+  public UserDTO getByGuid(String guid) {
+    return this.userRepository.findByGuid(guid).map(UserDTO::new)
+            .orElseThrow(() -> new RuntimeException(String.format("User by GUID not found: %s", guid)));
+  }
+
 
 }

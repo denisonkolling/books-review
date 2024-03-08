@@ -22,6 +22,8 @@ public class UserControllerIntegrationTest extends TestContainersDatabaseConfigu
 
     private static RequestSpecification specification;
     private static ObjectMapper objectMapper;
+    private static UserDTO userDTO;
+    private static CreateUserDTO createUserDTO;
 
     @BeforeAll
     static void setup() {
@@ -40,7 +42,7 @@ public class UserControllerIntegrationTest extends TestContainersDatabaseConfigu
     @DisplayName("Should create user with integration test success")
     void createUserWithIntegrationTestsShouldReturnSuccess() throws JsonProcessingException {
 
-        CreateUserDTO createUserDTO = new CreateUserDTO("test@test.com", "Test Name", "strong-password");
+        createUserDTO = new CreateUserDTO("test@test.com", "Test Name", "strong-password");
 
         String responseAsJson = RestAssured.given()
                 .spec(specification)
@@ -48,7 +50,7 @@ public class UserControllerIntegrationTest extends TestContainersDatabaseConfigu
                 .body(createUserDTO)
                 .when().post().then().statusCode(201).extract().body().asString();
 
-        UserDTO userDTO = objectMapper.readValue(responseAsJson, UserDTO.class);
+        userDTO = objectMapper.readValue(responseAsJson, UserDTO.class);
 
         Assertions.assertNotNull(userDTO);
         Assertions.assertNotNull(userDTO.guid());
@@ -57,6 +59,27 @@ public class UserControllerIntegrationTest extends TestContainersDatabaseConfigu
 
         Assertions.assertEquals(createUserDTO.name(), userDTO.name());
         Assertions.assertEquals(createUserDTO.email(), userDTO.email());
+    }
+
+    @Test
+    @Order(2)
+    @DisplayName("Return user By Guid with success")
+    void getUserByIntegrationTestShouldReturnSuccess() throws JsonProcessingException {
+        String responseAsJson = RestAssured.given()
+                .spec(specification)
+                .pathParam("id", userDTO.guid())
+                .auth().basic(createUserDTO.email(), createUserDTO.password())
+                .when().get("{id}").then().statusCode(200).extract().body().asString();
+
+        UserDTO userById = objectMapper.readValue(responseAsJson, UserDTO.class);
+
+        Assertions.assertNotNull(userById);
+        Assertions.assertNotNull(userById.guid());
+        Assertions.assertNotNull(userById.name());
+        Assertions.assertNotNull(userById.email());
+
+        Assertions.assertEquals(userDTO.name(), userById.name());
+        Assertions.assertEquals(userDTO.email(), userById.email());
     }
 
 

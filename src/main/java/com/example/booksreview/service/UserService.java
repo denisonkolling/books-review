@@ -7,8 +7,9 @@ import com.example.booksreview.model.User;
 
 public interface UserService {
 
-  UserDTO createUser(CreateUserDTO createUserDTO);
+    UserDTO createUser(CreateUserDTO createUserDTO);
 
-  User findByEmail(String email);
-  
+    User findByEmail(String email);
+
+    UserDTO getByGuid(String guid);
 }
