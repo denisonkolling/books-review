@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public interface BookService {
 
-  Book createBook(CreateBookDTO createBookDTO, UserDetails userInSession);
+  BookDTO createBook(CreateBookDTO createBookDTO, UserDetails userInSession);
 
   List<BookDTO> findAllBooks();
 

@@ -25,20 +25,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping("/book")
 public class BookController {
 
-  private BookService bookService;
+  private final BookService bookService;
 
   public BookController(BookService bookService) {
     this.bookService = bookService;
   }
 
   @PostMapping
-  public ResponseEntity<Book> createBook(@RequestBody CreateBookDTO createBookDTO, @AuthenticationPrincipal UserDetails userInSession) {
-    return new ResponseEntity<Book>(bookService.createBook(createBookDTO, userInSession), HttpStatus.CREATED);
+  public ResponseEntity<BookDTO> createBook(@RequestBody CreateBookDTO createBookDTO, @AuthenticationPrincipal UserDetails userInSession) {
+    return new ResponseEntity<>(bookService.createBook(createBookDTO, userInSession), HttpStatus.CREATED);
   }
 
   @GetMapping
   public ResponseEntity<List<BookDTO>> findAllBooks() {
-    return new ResponseEntity<List<BookDTO>>(bookService.findAllBooks(), HttpStatus.OK);
+    return new ResponseEntity<>(bookService.findAllBooks(), HttpStatus.OK);
   }
 
   @GetMapping("/{id}")
@@ -46,8 +46,8 @@ public class BookController {
     return new ResponseEntity<>(bookService.findBookById(id), HttpStatus.OK);
   }
 
-  @PostMapping("/{id}/review")
-  public ResponseEntity<?> createBookReview(@PathVariable Long id, @RequestBody CreateReviewDTO createReviewDTO, @AuthenticationPrincipal UserDetails userInSession) {
+  @PostMapping("/review")
+  public ResponseEntity<?> createBookReview(@RequestBody CreateReviewDTO createReviewDTO, @AuthenticationPrincipal UserDetails userInSession) {
       return new ResponseEntity<>(bookService.createBookReview(createReviewDTO, userInSession), HttpStatus.CREATED);
   }
   

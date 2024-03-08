@@ -22,75 +22,77 @@ import java.util.List;
 @Service
 public class BookServiceImpl implements BookService {
 
-  private final BookRepository bookRepository;
+    private final BookRepository bookRepository;
 
-  private final ReviewRepository reviewRepository;
+    private final ReviewRepository reviewRepository;
 
-  private final UserService userService;
+    private final UserService userService;
 
-  public BookServiceImpl(BookRepository bookRepository, ReviewRepository reviewRepository, UserService userService) {
-    this.bookRepository = bookRepository;
-    this.reviewRepository = reviewRepository;
-    this.userService = userService;
-  }
-
-  @Override
-  public Book createBook(CreateBookDTO createBookDTO, UserDetails userInSession) {
-
-    User user = this.userService.findByEmail(userInSession.getUsername());
-
-      return this.bookRepository.save(new Book(createBookDTO, user));
-
-  }
-
-  @Override
-  public List<BookDTO> findAllBooks() {
-
-    List<Book> booksList = bookRepository.findAll();
-
-    List<BookDTO> booksDTOList = new ArrayList<>();
-
-    for (Book book : booksList) {
-      BookDTO bookDTO = new BookDTO(book);
-      booksDTOList.add(bookDTO);
+    public BookServiceImpl(BookRepository bookRepository, ReviewRepository reviewRepository, UserService userService) {
+        this.bookRepository = bookRepository;
+        this.reviewRepository = reviewRepository;
+        this.userService = userService;
     }
 
-    return booksDTOList;
+    @Override
+    public BookDTO createBook(CreateBookDTO createBookDTO, UserDetails userInSession) {
 
-  }
+        User user = this.userService.findByEmail(userInSession.getUsername());
 
-  @Override
-  public BookDTO findBookById(Long id) {
+        var book = this.bookRepository.save(new Book(createBookDTO, user));
 
-    Book bookDB = bookRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Livro não encontrado com o ID: " + id));
+        return new BookDTO(book);
 
-    return new BookDTO(bookDB);
-
-  }
-
-  @Override
-  public ReviewDTO createBookReview(CreateReviewDTO createReviewDTO, UserDetails userInSession) throws RuntimeException {
-    
-    Book book = bookRepository.findById(createReviewDTO.bookId())
-        .orElseThrow(() -> new RuntimeException("Livro não encontrado com o ID: " + createReviewDTO.bookId()));
-
-    User user = this.userService.findByEmail(userInSession.getUsername());
-
-    if (book.getReviews() == null) {
-      book.setReviews(new ArrayList<>());
     }
 
-    Review review = new Review();
-    review.setBook(book);
-    review.setRate(createReviewDTO.rate());
-    review.setUser(user);
+    @Override
+    public List<BookDTO> findAllBooks() {
 
-    reviewRepository.save(review);
+        List<Book> booksList = bookRepository.findAll();
 
-    book.getReviews().add(review);
+        List<BookDTO> booksDTOList = new ArrayList<>();
 
-    return new ReviewDTO(review);
-  }
+        for (Book book : booksList) {
+            BookDTO bookDTO = new BookDTO(book);
+            booksDTOList.add(bookDTO);
+        }
+
+        return booksDTOList;
+
+    }
+
+    @Override
+    public BookDTO findBookById(Long id) {
+
+        Book bookDB = bookRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Book not found with ID: " + id));
+
+        return new BookDTO(bookDB);
+
+    }
+
+    @Override
+    public ReviewDTO createBookReview(CreateReviewDTO createReviewDTO, UserDetails userInSession) throws RuntimeException {
+
+        Book book = bookRepository.findById(createReviewDTO.bookId())
+                .orElseThrow(() -> new RuntimeException("Book not found with ID: " + createReviewDTO.bookId()));
+
+        User user = this.userService.findByEmail(userInSession.getUsername());
+
+        if (book.getReviews() == null) {
+            book.setReviews(new ArrayList<>());
+        }
+
+        Review review = new Review();
+        review.setBook(book);
+        review.setRate(createReviewDTO.rate());
+        review.setUser(user);
+
+        reviewRepository.save(review);
+
+        book.getReviews().add(review);
+
+        return new ReviewDTO(review);
+    }
 
 }
